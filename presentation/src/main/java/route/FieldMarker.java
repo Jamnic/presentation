@@ -20,10 +20,13 @@ public class FieldMarker {
 
 			addStartFieldToTheQueue(startField);
 
-			if (markArrayForShortestPath(searchingQueue, destinationField))
+			if (markArrayForShortestPath(searchingQueue, destinationField)) {
+				printMarkedArray(markerArray, start, destination);
 				return markerArray;
+			}
 		}
 
+		printMarkedArray(markerArray, start, destination);
 		return null;
 	}
 
@@ -36,7 +39,7 @@ public class FieldMarker {
 
 		// Startujemy dodaj¹c pierwsze pole do kolejki
 		Coords coords = start.getCoords();
-		markerArray[coords.getX()][coords.getY()] = 1;
+		markerArray[coords.getX()][coords.getY()] = 0;
 
 		searchingQueue.add(start);
 
@@ -65,28 +68,14 @@ public class FieldMarker {
 	private boolean markSurroundingFieldsAndAddToQueue(Collection<Field> collection, int x, int y, int actualIndex,
 			Coords destinationCoords) {
 
-		for (int i = -1; i <= 1; ++i) {
-
-			for (int j = -1; j <= 1; ++j) {
-
-				if (i != 0 || j != 0)
-					if (tryToAddField(i, j, collection, actualIndex, destinationCoords))
-						return true;
-
-			}
-
-		}
-
-		return false;
-
-		// return tryToAddField(x + 1, y - 1, collection, actualIndex, destinationCoords)
-		// || tryToAddField(x + 1, y + 0, collection, actualIndex, destinationCoords)
-		// || tryToAddField(x + 1, y + 1, collection, actualIndex, destinationCoords)
-		// || tryToAddField(x + 0, y - 1, collection, actualIndex, destinationCoords)
-		// || tryToAddField(x + 0, y + 1, collection, actualIndex, destinationCoords)
-		// || tryToAddField(x - 1, y - 1, collection, actualIndex, destinationCoords)
-		// || tryToAddField(x - 1, y + 0, collection, actualIndex, destinationCoords)
-		// || tryToAddField(x - 1, y + 1, collection, actualIndex, destinationCoords);
+		return tryToAddField(x + 1, y - 1, collection, actualIndex, destinationCoords)
+				|| tryToAddField(x + 1, y + 0, collection, actualIndex, destinationCoords)
+				|| tryToAddField(x + 1, y + 1, collection, actualIndex, destinationCoords)
+				|| tryToAddField(x + 0, y - 1, collection, actualIndex, destinationCoords)
+				|| tryToAddField(x + 0, y + 1, collection, actualIndex, destinationCoords)
+				|| tryToAddField(x - 1, y - 1, collection, actualIndex, destinationCoords)
+				|| tryToAddField(x - 1, y + 0, collection, actualIndex, destinationCoords)
+				|| tryToAddField(x - 1, y + 1, collection, actualIndex, destinationCoords);
 
 	}
 
@@ -131,6 +120,22 @@ public class FieldMarker {
 
 		}
 
+	}
+
+	private void printMarkedArray(int[][] markerArray, Coords start, Coords destination) {
+		for (int i = 0; i < markerArray.length; ++i) {
+			for (int j = 0; j < markerArray[i].length; ++j) {
+
+				if (start.getX() == i && start.getY() == j)
+					System.out.print(" @");
+				else if (destination.getX() == i && destination.getY() == j)
+					System.out.print(" #");
+				else
+					System.out.print(" " + markerArray[i][j]);
+			}
+			System.out.println();
+		}
+		System.out.println();
 	}
 
 }
